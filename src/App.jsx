@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Send, Mail } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Send, Mail, Download, MessageCircle } from 'lucide-react';
 import './App.css';
 
 function App() {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [downloading, setDownloading] = useState(false);
+  const contentRef = useRef(null);
 
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -13,6 +15,47 @@ function App() {
     setSelectedImage(null);
   };
 
+  const downloadPDF = async () => {
+    if (downloading) return;
+    setDownloading(true);
+    try {
+      const { default: html2canvas } = await import('html2canvas');
+      const { jsPDF } = await import('jspdf');
+
+      const element = contentRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+      const pageHeight = 297;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save('curriculo-mailson-alves.pdf');
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
@@ -20,10 +63,9 @@ function App() {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <img
-              src="https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/photo_2023-04-23_19-00-21.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vcGhvdG9fMjAyMy0wNC0yM18xOS0wMC0yMS5qcGciLCJpYXQiOjE3NDA2MDk5NzksImV4cCI6MTc3MjE0NTk3OX0.ZJHfxE5YhBdx9WVnvKPPfXBLgeU9rfF8m1TxiZKS_dw"
+              src="https://ui-avatars.com/api/?name=Mailson+Alves&background=005bb3&color=fff&size=200"
               alt="Profile"
               className="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg"
-              onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
             />
             <div>
               <h1 className="text-4xl font-bold mb-2">
@@ -38,10 +80,11 @@ function App() {
                 equipes de trabalho, priorizando o crescimento da organização e
                 o meu desenvolvimento pessoal e profissional.
               </p>
-              <div className="flex gap-4 mt-6">
+              <div className="flex flex-wrap gap-3 mt-6 items-center">
                 <a
                   href="mailto:alcance963@gmail.com"
-                  className="text-white hover:text-blue-200"
+                  className="text-white hover:text-blue-200 transition-colors"
+                  title="Enviar e-mail"
                 >
                   <Mail className="w-6 h-6" />
                 </a>
@@ -49,15 +92,27 @@ function App() {
                   href="https://wa.me/5589999719144?text=Olá%20Mailson,%20vi%20seu%20currículo%20online!"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white hover:text-blue-200"
+                  className="text-white hover:text-blue-200 transition-colors"
+                  title="Enviar WhatsApp"
                 >
                   <Send className="w-6 h-6" />
                 </a>
+                <button
+                  onClick={downloadPDF}
+                  disabled={downloading}
+                  className="btn-download"
+                >
+                  <Download className="w-5 h-5" />
+                  <span>{downloading ? 'Gerando...' : 'Baixar PDF'}</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Content for PDF */}
+      <div ref={contentRef}>
 
       {/* Education Section */}
       <section className="py-16 bg-white">
@@ -175,27 +230,27 @@ function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {[
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/bloco%20pedagogico.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vYmxvY28gcGVkYWdvZ2ljby5qcGciLCJpYXQiOjE3NDA2MDk4NjIsImV4cCI6MTc3MjE0NTg2Mn0.YkOMGuZ_wj9Mur891BMwYTpsZ-D-YHPtWLwQdybcGsU',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Engenharia',
                 title: 'Bloco Principal finalizado',
                 description: 'Rampa de acesso em concreto armado'
               },
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/mailson.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vbWFpbHNvbi5qcGciLCJpYXQiOjE3NDA2MDk3MjYsImV4cCI6MTc3MjE0NTcyNn0.LhVXtJ3m8n9PbAAUg9zGITUO5HzXgYnITo-4_LRpgow',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Engenharia',
                 title: 'Verificação de Medidas',
                 description: 'Conferindo medidas para garantir a exatidão do volume de concreto necessário para a execução da fundação'
               },
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/perfuracoes%20de%20solo.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vcGVyZnVyYWNvZXMgZGUgc29sby5qcGciLCJpYXQiOjE3NDA2MTAwNDksImV4cCI6MTc3MjE0NjA0OX0.Cpkf-0HwhQdPV7-gnrc79eEqnczih43SCACjE_vVyGs',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Engenharia',
                 title: 'Croqui de Acompanhamento',
                 description: 'Detalhes de acompanhamento de concretagem de laje de grande porte, 42 caminhões de concreto executados no dia'
               },
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/vista%20aerea.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vdmlzdGEgYWVyZWEuanBnIiwiaWF0IjoxNzQwNjEwMTAwLCJleHAiOjE3NzIxNDYxMDB9.emfC77p95kOGwKSvXsImGwWmPVyY7Ms9N2YkMf24cpY',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Engenharia',
                 title: 'Foto Aérea',
                 description: 'Vista aérea do canteiro de obras, foto capturada por drone'
               },
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/quadra%20de%20esportes.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vcXVhZHJhIGRlIGVzcG9ydGVzLmpwZyIsImlhdCI6MTc0MDYxMDE5MywiZXhwIjoxNzcyMTQ2MTkzfQ.xRM-j_67zxHkVyqusgxvMyh8wPCTKzBvv0b15lMLNmA',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Engenharia',
                 title: 'Quadra de Esportes Finalizada',
                 description: 'Vista aérea do canteiro de obras, foto capturada por drone'
               }
@@ -224,22 +279,22 @@ function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/fun%20maze.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vZnVuIG1hemUucG5nIiwiaWF0IjoxNzQwNjEwMzE4LCJleHAiOjE3NzIxNDYzMTh9.IDv1pZWr60ZRY_l4TUeU54x5kTR8q4Hxx8hM0cv5Q8g',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Programacao',
                 title: 'Landing Page',
                 description: 'Página web para redirecionamento e captação de venda de ebook. Tecnologias: HTML, CSS, JavaScript'
               },
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/tech%20cactus.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vdGVjaCBjYWN0dXMuanBnIiwiaWF0IjoxNzQwNjExMzM1LCJleHAiOjE3NzIxNDczMzV9.aAEA0n3qcdfXaUqdOQdIg_dRRfzmlFbukTabeKngZqE',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Programacao',
                 title: 'Captura de Clientes',
                 description: 'Página web para capturar novos clientes para academia de musculação. Tecnologias: HTML, CSS, JavaScript'
               },
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/program.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vcHJvZ3JhbS5qcGciLCJpYXQiOjE3NDA2MTE0OTAsImV4cCI6MTc3MjE0NzQ5MH0.RP0Ua1CD9z5cUoq76bA7OrbXv-wiNW0rduQkq2yOroA',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Programacao',
                 title: 'Edição no Código',
                 description: 'Imagem no momento da edição do código html do Site CactusTech. Tecnologias: HTML, CSS, JavaScript'
               },
               {
-                url: 'https://qcmptpioeppfyvachhln.supabase.co/storage/v1/object/sign/curriculo/bubble.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjdXJyaWN1bG8vYnViYmxlLnBuZyIsImlhdCI6MTc0MDYxMjA0MCwiZXhwIjoxNzcyMTQ4MDQwfQ.pom33O0Sn2tz13U1uSuvjcv-CTG9F9Nek87-_VMen6U',
+                url: 'https://placehold.co/600x400/e5eeff/005bb3?text=Programacao',
                 title: 'Projeto em Execução',
                 description: 'Aplicativo web para gerenciamento de escolas em desenvolvimento com Bubble.io e Supabase'
               }
@@ -265,6 +320,8 @@ function App() {
         </div>
       </section>
 
+      </div>
+
       {/* Modal para visualização da imagem */}
       {selectedImage && (
         <div
@@ -288,15 +345,15 @@ function App() {
         </div>
       )}
 
-      {/* WhatsApp Button (CTA) */}
+      {/* WhatsApp Floating Button */}
       <a
         href="https://wa.me/5589999719144?text=Olá%20Mailson,%20vi%20seu%20currículo%20online!"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-600 transition-colors flex items-center gap-2"
+        className="whatsapp-float"
+        title="Falar no WhatsApp"
       >
-        <Send className="w-5 h-5" />
-        <span>Enviar Mensagem</span>
+        <MessageCircle className="w-7 h-7" />
       </a>
 
       {/* Footer */}

@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@theme {
+  --color-on-background: #0b1c30;
+  --color-surface-tint: #005db7;
+  --color-on-error: #ffffff;
+  --color-on-secondary-fixed-variant: #4b454a;
+  --color-on-secondary-fixed: #1f1a1e;
+  --color-inverse-surface: #213145;
+  --color-on-primary-fixed-variant: #00468c;
+  --color-secondary: #635c61;
+  --color-on-secondary-container: #686066;
+  --color-primary-fixed: #d6e3ff;
+  --color-secondary-fixed: #eae0e6;
+  --color-on-tertiary-container: #fefcff;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-secondary-container: #e7dde3;
+  --color-tertiary: #545c72;
+  --color-on-primary: #ffffff;
+  --color-tertiary-container: #6c748b;
+  --color-primary-container: #0073df;
+  --color-tertiary-fixed: #dae2fd;
+  --color-on-surface-variant: #414754;
+  --color-inverse-primary: #a9c7ff;
+  --color-outline: #717786;
+  --color-surface-container: #e5eeff;
+  --color-surface-dim: #cbdbf5;
+  --color-tertiary-fixed-dim: #bec6e0;
+  --color-on-primary-container: #fefcff;
+  --color-primary-fixed-dim: #a9c7ff;
+  --color-surface-container-low: #eff4ff;
+  --color-secondary-fixed-dim: #cec4ca;
+  --color-surface-bright: #f8f9ff;
+  --color-primary: #005bb3;
+  --color-on-error-container: #93000a;
+  --color-surface-variant: #d3e4fe;
+  --color-surface: #f8f9ff;
+  --color-on-surface: #0b1c30;
+  --color-surface-container-highest: #d3e4fe;
+  --color-on-tertiary-fixed-variant: #3f465c;
+  --color-on-primary-fixed: #001b3d;
+  --color-on-tertiary-fixed: #131b2e;
+  --color-on-tertiary: #ffffff;
+  --color-background: #f8f9ff;
+  --color-on-secondary: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-outline-variant: #c0c6d6;
+  --color-error: #ba1a1a;
+  --color-surface-container-high: #dce9ff;
+  --color-error-container: #ffdad6;
+  --font-headline-md: "Manrope", sans-serif;
+  --font-headline-lg: "Manrope", sans-serif;
+  --font-label-sm: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-display-lg: "Manrope", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-label-lg: "Manrope", sans-serif;
+  --font-headline-sm: "Manrope", sans-serif;
+  --text-headline-md: 24px;
+  --text-headline-lg: 32px;
+  --text-label-sm: 12px;
+  --text-body-md: 14px;
+  --text-display-lg: 48px;
+  --text-body-lg: 16px;
+  --text-label-lg: 14px;
+  --text-headline-sm: 18px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+body {
+  background-color: #f8f9ff;
+  color: #0b1c30;
+}
+.sidebar-bg {
+  background-color: #e7dde3;
+}
+/* WhatsApp floating button */
+.whatsapp-float {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: #25d366;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37,211,102,0.4);
+  transition: all 0.3s ease;
+  z-index: 60;
+  animation: pulse-wa 2s infinite;
+  text-decoration: none;
+}
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(37,211,102,0.6);
+}
+@keyframes pulse-wa {
+  0%   { box-shadow: 0 4px 12px rgba(37,211,102,0.4); }
+  50%  { box-shadow: 0 4px 24px rgba(37,211,102,0.7); }
+  100% { box-shadow: 0 4px 12px rgba(37,211,102,0.4); }
+}
+/* Lightbox */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+#lightbox.open { display: flex; }
+#lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 0.5rem; }
+/* Skill bar animation */
+.skill-bar { transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+/* Mobile sidebar overlay */
+#sidebar-overlay { display: none; }
+#sidebar-overlay.open { display: block; }
+/* Fade-in sections */
+.fade-section {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-section.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Custom scrollbar for admin */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0,91,179,0.2);
+  border-radius: 2px;
+}
+/* Toast notification */
+#toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  transform: translateY(120%);
+  transition: transform 0.3s ease;
+}
+#toast.show { transform: translateY(0); }
+/* Sidebar active */
+.nav-item.active {
+  color: #00468c;
+  font-weight: 700;
+  border-left: 4px solid #a9c7ff;
+  padding-left: calc(1rem - 4px);
+  background: rgba(209,227,255,0.15);
+}

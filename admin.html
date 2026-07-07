@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Painel Admin — Maílson Alves Portfolio</title>
+  <meta name="description" content="Painel administrativo do portfolio digital de Maílson Alves dos Santos.">
+  <link href="/src/index.css" rel="stylesheet">
+</head>
+<body class="font-body-md text-body-md overflow-hidden">
+
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-inverse-surface flex flex-col py-8 px-5 z-50">
+  <div class="mb-10">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-11 h-11 rounded-full overflow-hidden bg-surface-container ring-2 ring-primary-fixed/40 flex-shrink-0">
+        <img
+          class="w-full h-full object-cover"
+          src="https://ui-avatars.com/api/?name=Mailson+Alves&background=213145&color=fff&size=100"
+          alt="Maílson Alves"
+        >
+      </div>
+      <div>
+        <h1 class="font-headline-md text-headline-md text-inverse-on-surface text-base font-bold leading-tight">Maílson Alves</h1>
+        <p class="font-body-md text-body-md text-inverse-on-surface/60 text-xs">Chefe de TI / Programador</p>
+      </div>
+    </div>
+    <a href="index.html"
+      class="w-full py-2.5 px-4 bg-primary text-white font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-95 rounded-sm text-xs"
+      id="view-portfolio-btn">
+      <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+      Ver Portfólio Público
+    </a>
+  </div>
+
+  <nav class="flex-1 space-y-0.5">
+    <a id="nav-overview" class="nav-item active flex items-center gap-3 py-2.5 text-inverse-on-surface/80 pl-4 hover:text-inverse-on-surface hover:bg-white/5 transition-colors rounded-sm text-sm cursor-pointer" onclick="showSection('overview', this)">
+      <span class="material-symbols-outlined text-xl">person</span>
+      <span>Visão Geral</span>
+    </a>
+    <a id="nav-experience" class="nav-item flex items-center gap-3 py-2.5 text-inverse-on-surface/70 pl-4 hover:text-inverse-on-surface hover:bg-white/5 transition-colors rounded-sm text-sm cursor-pointer" onclick="showSection('experience', this)">
+      <span class="material-symbols-outlined text-xl">work</span>
+      <span>Experiência</span>
+    </a>
+    <a id="nav-projects" class="nav-item flex items-center gap-3 py-2.5 text-inverse-on-surface/70 pl-4 hover:text-inverse-on-surface hover:bg-white/5 transition-colors rounded-sm text-sm cursor-pointer" onclick="showSection('projects', this)">
+      <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">folder_special</span>
+      <span>Projetos</span>
+    </a>
+    <a id="nav-education" class="nav-item flex items-center gap-3 py-2.5 text-inverse-on-surface/70 pl-4 hover:text-inverse-on-surface hover:bg-white/5 transition-colors rounded-sm text-sm cursor-pointer" onclick="showSection('education', this)">
+      <span class="material-symbols-outlined text-xl">school</span>
+      <span>Formação</span>
+    </a>
+    <a id="nav-contacts" class="nav-item flex items-center gap-3 py-2.5 text-inverse-on-surface/70 pl-4 hover:text-inverse-on-surface hover:bg-white/5 transition-colors rounded-sm text-sm cursor-pointer" onclick="showSection('contacts', this)">
+      <span class="material-symbols-outlined text-xl">contacts</span>
+      <span>Contatos</span>
+    </a>
+  </nav>
+
+  <div class="mt-auto pt-6 border-t border-white/10 space-y-0.5">
+    <a class="flex items-center gap-3 py-2.5 text-inverse-on-surface/60 pl-4 hover:text-inverse-on-surface hover:bg-white/5 transition-colors rounded-sm text-sm cursor-pointer" href="#">
+      <span class="material-symbols-outlined text-xl">settings</span>
+      <span>Configurações</span>
+    </a>
+    <a class="flex items-center gap-3 py-2.5 text-inverse-on-surface/60 pl-4 hover:text-inverse-on-surface hover:bg-white/5 transition-colors rounded-sm text-sm cursor-pointer" href="#">
+      <span class="material-symbols-outlined text-xl">logout</span>
+      <span>Sair</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Main Wrapper -->
+<div class="ml-[280px] flex flex-col h-screen">
+
+  <!-- TopAppBar -->
+  <header class="sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full px-8 h-16">
+    <div class="flex items-center gap-6">
+      <span class="font-headline-md text-headline-md font-bold text-on-surface text-base">Admin Portal</span>
+      <nav class="hidden lg:flex items-center gap-5">
+        <a class="text-primary font-bold border-b-2 border-primary pb-0.5 text-sm" href="#">Dashboard</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Analytics</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative w-56">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+        <input
+          id="search-input"
+          class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary h-9 pl-9 pr-4 text-sm rounded-sm"
+          placeholder="Buscar..."
+          type="text"
+          onkeyup="handleSearch(this.value)"
+        >
+      </div>
+      <button id="notif-btn" class="p-2 text-on-surface-variant hover:text-primary transition-all relative" title="Notificações">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+      </button>
+      <button
+        id="save-btn"
+        onclick="handleSave()"
+        class="px-5 py-2 bg-primary text-white text-sm font-semibold hover:brightness-110 transition-all active:scale-95 rounded-sm"
+      >
+        Salvar Alterações
+      </button>
+      <div class="w-8 h-8 rounded-full bg-primary-fixed overflow-hidden ring-2 ring-primary/20">
+        <img
+          class="w-full h-full object-cover"
+          src="https://ui-avatars.com/api/?name=M&background=d6e3ff&color=005bb3&size=64"
+          alt="Avatar"
+        >
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Canvas -->
+  <main class="flex-1 overflow-y-auto custom-scrollbar bg-background px-10 py-10">
+    <div class="max-w-[1100px] mx-auto">
+
+      <!-- ===== SECTION: OVERVIEW ===== -->
+      <div id="section-overview">
+        <div class="mb-10">
+          <h2 class="font-display-lg text-[36px] leading-tight font-extrabold text-on-background mb-2">Visão Geral</h2>
+          <p class="text-on-surface-variant text-sm max-w-xl">Resumo do portfólio e métricas de visualização do currículo digital.</p>
+        </div>
+
+        <!-- Stats Bento -->
+        <div class="grid grid-cols-12 gap-5 mb-8">
+          <!-- Bio Card -->
+          <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant p-7 rounded-sm">
+            <h3 class="text-sm font-bold text-on-surface uppercase tracking-wider mb-5">Informações do Perfil</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Nome Completo</label>
+                <input type="text" value="Maílson Alves dos Santos"
+                  class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Cargo Atual</label>
+                <input type="text" value="Chefe de TI Educacional"
+                  class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Email</label>
+                <input type="email" value="alcance963@gmail.com"
+                  class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">WhatsApp</label>
+                <input type="text" value="+55 (89) 9 9971-9144"
+                  class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Sobre Mim</label>
+                <textarea rows="4" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm leading-relaxed">Profissional versátil com sólida formação em Engenharia Civil e transição estratégica para TI. Especialista em drones, automação e desenvolvimento de software.</textarea>
+              </div>
+            </div>
+            <div class="flex gap-3 mt-5">
+              <button onclick="handleSave()" class="px-5 py-2.5 bg-primary text-white text-xs font-semibold hover:brightness-110 transition-all active:scale-95 rounded-sm">Salvar Perfil</button>
+              <button class="px-5 py-2.5 border border-outline-variant text-on-surface-variant text-xs font-semibold hover:border-primary hover:text-primary transition-colors rounded-sm">Cancelar</button>
+            </div>
+          </div>
+
+          <!-- Metrics -->
+          <div class="col-span-12 lg:col-span-4 flex flex-col gap-4">
+            <div class="bg-surface-container-high p-6 rounded-sm flex-1">
+              <h3 class="text-xs font-bold uppercase text-on-surface-variant mb-5 tracking-wider">Métricas do Mês</h3>
+              <div class="space-y-5">
+                <div class="flex justify-between items-end">
+                  <div>
+                    <p class="text-xs text-on-surface-variant uppercase">Visualizações</p>
+                    <p class="text-4xl font-extrabold leading-none text-primary mt-1">1.284</p>
+                  </div>
+                  <span class="material-symbols-outlined text-primary text-3xl">trending_up</span>
+                </div>
+                <div class="flex justify-between items-end">
+                  <div>
+                    <p class="text-xs text-on-surface-variant uppercase">Interações</p>
+                    <p class="text-4xl font-extrabold leading-none text-tertiary mt-1">342</p>
+                  </div>
+                  <span class="material-symbols-outlined text-tertiary text-3xl">ads_click</span>
+                </div>
+                <div class="flex justify-between items-end">
+                  <div>
+                    <p class="text-xs text-on-surface-variant uppercase">Downloads PDF</p>
+                    <p class="text-4xl font-extrabold leading-none text-secondary mt-1">89</p>
+                  </div>
+                  <span class="material-symbols-outlined text-secondary text-3xl">download</span>
+                </div>
+              </div>
+            </div>
+            <div class="bg-primary-container p-5 text-on-primary-container rounded-sm">
+              <h3 class="font-bold text-sm mb-2">💡 Dica</h3>
+              <p class="text-xs opacity-90 leading-relaxed">Portfólios com foto profissional e descrição detalhada recebem 45% mais contatos de recrutadores.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: PROJECTS ===== -->
+      <div id="section-projects" class="hidden">
+        <div class="mb-10">
+          <h2 class="font-display-lg text-[36px] leading-tight font-extrabold text-on-background mb-2">Gerenciar Projetos</h2>
+          <p class="text-on-surface-variant text-sm max-w-xl">Edite descrições, status e informações dos seus projetos.</p>
+        </div>
+
+        <!-- Japede Project Card -->
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant p-7 relative rounded-sm">
+            <div class="absolute top-0 right-0 p-4">
+              <span class="bg-primary-container text-on-primary-container px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-sm">Destaque</span>
+            </div>
+            <div class="flex flex-col md:flex-row gap-7">
+              <div class="w-full md:w-1/3">
+                <div class="aspect-video bg-surface-container overflow-hidden mb-4 rounded-sm">
+                  <img src="https://placehold.co/600x400/e5eeff/005bb3?text=Projeto"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    alt="Japede Delivery">
+                </div>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Status</label>
+                    <select class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+                      <option value="in_progress" selected>Em andamento</option>
+                      <option value="completed">Concluído</option>
+                      <option value="on_hold">Pausado</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">URL do Projeto</label>
+                    <input type="url" value="https://japede.techcactus.com.br"
+                      class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+                  </div>
+                </div>
+              </div>
+              <div class="w-full md:w-2/3 flex flex-col justify-between">
+                <div>
+                  <input
+                    type="text"
+                    value="Japede Delivery"
+                    class="text-2xl font-bold text-on-background bg-transparent border-b-2 border-transparent focus:border-primary focus:ring-0 w-full mb-5 px-0 font-headline-lg"
+                  >
+                  <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-2">Descrição</label>
+                  <textarea rows="6" class="w-full bg-surface border border-outline-variant p-4 text-sm focus:border-primary focus:ring-0 leading-relaxed rounded-sm">Plataforma de delivery com gestão de pedidos em tempo real, integração de geolocalização e painel administrativo completo. Arquitetura escalável com React no frontend e Node.js no backend, hospedado via Docker Swarm com Traefik.</textarea>
+                </div>
+                <div class="flex gap-3 mt-6">
+                  <button class="flex-1 py-2.5 border border-primary text-primary text-xs font-semibold hover:bg-primary-fixed/10 transition-colors rounded-sm">Descartar</button>
+                  <button onclick="handleSave()" class="flex-1 py-2.5 bg-tertiary text-on-tertiary text-xs font-semibold hover:bg-tertiary-container transition-colors rounded-sm">Atualizar Projeto</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats card -->
+          <div class="col-span-12 lg:col-span-4 flex flex-col gap-4">
+            <div class="bg-surface-container-high p-6 rounded-sm">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-on-surface mb-5">Métricas — Japede</h3>
+              <div class="space-y-5">
+                <div class="flex justify-between items-end">
+                  <div>
+                    <p class="text-xs text-on-surface-variant uppercase">Visitas/mês</p>
+                    <p class="text-4xl font-extrabold leading-none text-primary mt-1">1.284</p>
+                  </div>
+                  <span class="material-symbols-outlined text-primary text-3xl">trending_up</span>
+                </div>
+                <div class="flex justify-between items-end">
+                  <div>
+                    <p class="text-xs text-on-surface-variant uppercase">Cliques</p>
+                    <p class="text-4xl font-extrabold leading-none text-tertiary mt-1">342</p>
+                  </div>
+                  <span class="material-symbols-outlined text-tertiary text-3xl">ads_click</span>
+                </div>
+              </div>
+            </div>
+            <div class="bg-primary-container p-5 text-on-primary-container rounded-sm flex-1">
+              <h3 class="font-bold text-sm mb-2">💡 Dica</h3>
+              <p class="text-xs opacity-90 leading-relaxed">Projetos com descrição detalhada e link ativo recebem 45% mais atenção de recrutadores.</p>
+            </div>
+          </div>
+
+          <!-- Outros projetos -->
+          <div class="col-span-12 bg-surface-container-lowest border border-outline-variant rounded-sm">
+            <div class="px-7 py-5 border-b border-outline-variant flex justify-between items-center">
+              <h3 class="font-bold text-sm text-on-surface">Outros Projetos</h3>
+              <button onclick="handleAddProject()" class="text-primary text-xs font-semibold hover:underline flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">add</span>
+                Adicionar Projeto
+              </button>
+            </div>
+            <div class="divide-y divide-outline-variant" id="projects-list">
+              <div class="px-7 py-5 flex items-center justify-between hover:bg-surface transition-colors cursor-pointer group">
+                <div class="flex items-center gap-5">
+                  <div class="w-11 h-11 bg-surface-container flex items-center justify-center rounded-sm flex-shrink-0">
+                    <span class="material-symbols-outlined text-on-surface-variant">badge</span>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-on-surface">Currículo Digital</h4>
+                    <p class="text-xs text-on-surface-variant">Portfolio pessoal — Docker + Nginx + Traefik + HTTPS</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-6">
+                  <span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 text-xs font-bold uppercase rounded-sm">Publicado</span>
+                  <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+                </div>
+              </div>
+              <div class="px-7 py-5 flex items-center justify-between hover:bg-surface transition-colors cursor-pointer group">
+                <div class="flex items-center gap-5">
+                  <div class="w-11 h-11 bg-surface-container flex items-center justify-center rounded-sm flex-shrink-0">
+                    <span class="material-symbols-outlined text-on-surface-variant">web</span>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-on-surface">Landing Pages</h4>
+                    <p class="text-xs text-on-surface-variant">Páginas de captação — HTML/CSS/JavaScript</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-6">
+                  <span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 text-xs font-bold uppercase rounded-sm">Concluído</span>
+                  <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: EXPERIENCE ===== -->
+      <div id="section-experience" class="hidden">
+        <div class="mb-10">
+          <h2 class="font-display-lg text-[36px] leading-tight font-extrabold text-on-background mb-2">Experiência Profissional</h2>
+          <p class="text-on-surface-variant text-sm max-w-xl">Gerencie suas experiências profissionais.</p>
+        </div>
+        <div class="space-y-5" id="experience-list">
+          <!-- Item 1 -->
+          <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-sm group hover:border-primary transition-colors">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Empresa</label>
+                  <input type="text" value="Município de Currais" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Cargo</label>
+                  <input type="text" value="Chefe de TI Educacional" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Período</label>
+                  <input type="text" value="2025 — Presente" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+                </div>
+              </div>
+              <span class="ml-4 px-2 py-0.5 bg-primary-fixed text-primary text-xs font-bold uppercase rounded-sm flex-shrink-0">Atual</span>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Descrição</label>
+              <textarea rows="2" class="w-full bg-surface border border-outline-variant p-3 text-sm focus:border-primary focus:ring-0 rounded-sm">Servidor público em cargo de comissão, responsável pela gestão e infraestrutura de TI no setor educacional do município.</textarea>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-sm group hover:border-primary transition-colors">
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Empresa</label>
+                <input type="text" value="Alcance Engenharia" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Cargo</label>
+                <input type="text" value="Auxiliar Administrativo" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Período</label>
+                <input type="text" value="2021 — 2022" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Descrição</label>
+              <textarea rows="2" class="w-full bg-surface border border-outline-variant p-3 text-sm focus:border-primary focus:ring-0 rounded-sm">Suporte administrativo e operacional em projetos de engenharia civil em Brasília - DF.</textarea>
+            </div>
+          </div>
+          <!-- Botão adicionar -->
+          <button onclick="handleAddExperience()" class="w-full py-3 border-2 border-dashed border-outline-variant text-on-surface-variant text-sm hover:border-primary hover:text-primary transition-colors rounded-sm flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">add</span>
+            Adicionar Experiência
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: EDUCATION ===== -->
+      <div id="section-education" class="hidden">
+        <div class="mb-10">
+          <h2 class="font-display-lg text-[36px] leading-tight font-extrabold text-on-background mb-2">Formação Acadêmica</h2>
+          <p class="text-on-surface-variant text-sm max-w-xl">Gerencie sua formação e certificações.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-sm hover:border-primary transition-colors">
+            <div class="flex justify-between items-start mb-4">
+              <span class="material-symbols-outlined text-3xl text-primary/30">terminal</span>
+              <span class="px-2 py-0.5 bg-primary-fixed text-primary text-xs font-bold uppercase rounded-sm">Cursando</span>
+            </div>
+            <input type="text" value="Análise e Desenvolvimento de Sistemas" class="w-full font-bold text-on-background bg-transparent border-b border-outline-variant focus:border-primary mb-2 text-sm py-1">
+            <input type="text" value="Ensino Superior — Foco em Backend e Automação" class="w-full text-on-surface-variant bg-transparent border-none text-xs focus:outline-none">
+          </div>
+          <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-sm hover:border-primary transition-colors">
+            <div class="flex justify-between items-start mb-4">
+              <span class="material-symbols-outlined text-3xl text-primary/30">foundation</span>
+              <span class="px-2 py-0.5 bg-secondary-container text-secondary text-xs font-bold uppercase rounded-sm">Trancado</span>
+            </div>
+            <input type="text" value="Bacharel em Engenharia Civil — UNIP" class="w-full font-bold text-on-background bg-transparent border-b border-outline-variant focus:border-primary mb-2 text-sm py-1">
+            <input type="text" value="Brasília - DF • 10º Semestre • 2020" class="w-full text-on-surface-variant bg-transparent border-none text-xs focus:outline-none">
+          </div>
+          <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-sm hover:border-primary transition-colors">
+            <div class="flex justify-between items-start mb-4">
+              <span class="material-symbols-outlined text-3xl text-primary/30">flight_takeoff</span>
+              <span class="px-2 py-0.5 bg-primary-fixed text-primary text-xs font-bold uppercase rounded-sm">Certificado</span>
+            </div>
+            <input type="text" value="Operador de Drone Profissional" class="w-full font-bold text-on-background bg-transparent border-b border-outline-variant focus:border-primary mb-2 text-sm py-1">
+            <input type="text" value="Mapeamento Aéreo e Inspeção Técnica" class="w-full text-on-surface-variant bg-transparent border-none text-xs focus:outline-none">
+          </div>
+          <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-sm hover:border-primary transition-colors">
+            <div class="flex justify-between items-start mb-4">
+              <span class="material-symbols-outlined text-3xl text-primary/30">school</span>
+              <span class="px-2 py-0.5 bg-secondary-container text-secondary text-xs font-bold uppercase rounded-sm">Concluído</span>
+            </div>
+            <input type="text" value="Ensino Médio" class="w-full font-bold text-on-background bg-transparent border-b border-outline-variant focus:border-primary mb-2 text-sm py-1">
+            <input type="text" value="Formação Geral de Base • 2008" class="w-full text-on-surface-variant bg-transparent border-none text-xs focus:outline-none">
+          </div>
+        </div>
+        <div class="mt-5 flex gap-3">
+          <button onclick="handleSave()" class="px-5 py-2.5 bg-primary text-white text-xs font-semibold hover:brightness-110 transition-all active:scale-95 rounded-sm">Salvar Formação</button>
+          <button onclick="handleAddEducation()" class="px-5 py-2.5 border border-dashed border-outline-variant text-on-surface-variant text-xs hover:border-primary hover:text-primary transition-colors rounded-sm flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">add</span>Adicionar
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: CONTACTS ===== -->
+      <div id="section-contacts" class="hidden">
+        <div class="mb-10">
+          <h2 class="font-display-lg text-[36px] leading-tight font-extrabold text-on-background mb-2">Contatos</h2>
+          <p class="text-on-surface-variant text-sm max-w-xl">Gerencie suas informações de contato exibidas no portfólio.</p>
+        </div>
+        <div class="bg-surface-container-lowest border border-outline-variant p-7 rounded-sm max-w-2xl">
+          <div class="space-y-5">
+            <div class="flex items-center gap-4">
+              <span class="material-symbols-outlined text-primary text-2xl flex-shrink-0">call</span>
+              <div class="flex-1">
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Telefone</label>
+                <input type="text" value="+55 (89) 9 9971-9144" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="material-symbols-outlined text-primary text-2xl flex-shrink-0">mail</span>
+              <div class="flex-1">
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Email</label>
+                <input type="email" value="alcance963@gmail.com" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="material-symbols-outlined text-primary text-2xl flex-shrink-0">chat</span>
+              <div class="flex-1">
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">WhatsApp (número)</label>
+                <input type="text" value="5589999719144" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="material-symbols-outlined text-primary text-2xl flex-shrink-0">language</span>
+              <div class="flex-1">
+                <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">URL do Portfólio</label>
+                <input type="url" value="https://mailsonalves.techcactus.com.br" class="w-full border border-outline-variant bg-surface text-sm py-2 px-3 focus:border-primary focus:ring-0 rounded-sm">
+              </div>
+            </div>
+          </div>
+          <button onclick="handleSave()" class="mt-6 px-5 py-2.5 bg-primary text-white text-xs font-semibold hover:brightness-110 transition-all active:scale-95 rounded-sm">Salvar Contatos</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="flex justify-between items-center px-10 py-5 bg-surface-container-lowest border-t border-outline-variant flex-shrink-0">
+    <p class="text-xs text-on-surface-variant opacity-70">© 2025 Maílson Alves dos Santos • Structure &amp; Softness</p>
+    <div class="flex gap-6">
+      <a class="text-xs text-on-surface-variant hover:text-primary transition-colors" href="mailto:alcance963@gmail.com">Email</a>
+      <a class="text-xs text-on-surface-variant hover:text-primary transition-colors" href="https://wa.me/5589999719144" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a class="text-xs text-on-surface-variant hover:text-primary transition-colors" href="index.html">Portfólio</a>
+    </div>
+  </footer>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="bg-inverse-surface text-inverse-on-surface px-5 py-3 rounded-sm shadow-xl flex items-center gap-3 text-sm font-semibold">
+  <span class="material-symbols-outlined text-green-400">check_circle</span>
+  <span id="toast-msg">Alterações salvas com sucesso!</span>
+</div>
+
+<script>
+  // ---- Navigation ----
+  const sections = ['overview', 'projects', 'experience', 'education', 'contacts'];
+
+  function showSection(id, el) {
+    sections.forEach(s => {
+      document.getElementById(`section-${s}`).classList.add('hidden');
+      const navEl = document.getElementById(`nav-${s}`);
+      if (navEl) navEl.classList.remove('active');
+    });
+    document.getElementById(`section-${id}`).classList.remove('hidden');
+    if (el) el.classList.add('active');
+  }
+
+  // ---- Save feedback ----
+  function showToast(msg = 'Alterações salvas com sucesso!') {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  function handleSave() {
+    showToast('Alterações salvas com sucesso!');
+  }
+
+  // ---- Notification bell ----
+  document.getElementById('notif-btn').addEventListener('click', () => {
+    showToast('Sem novas notificações no momento.');
+  });
+
+  // ---- Search ----
+  function handleSearch(val) {
+    if (val.length < 2) return;
+    // Basic placeholder search highlight
+    console.log('Buscando:', val);
+  }
+
+  // ---- Add actions (placeholder) ----
+  function handleAddProject() { showToast('Funcionalidade em desenvolvimento...'); }
+  function handleAddExperience() { showToast('Funcionalidade em desenvolvimento...'); }
+  function handleAddEducation() { showToast('Funcionalidade em desenvolvimento...'); }
+
+  // ---- Prevent # links ----
+  document.querySelectorAll('a[href="#"]').forEach(el => {
+    el.addEventListener('click', e => e.preventDefault());
+  });
+</script>
+
+</body>
+</html>
